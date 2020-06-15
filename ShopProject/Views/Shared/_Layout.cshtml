@@ -1,0 +1,113 @@
+﻿@using ShopProject.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@using ShopProject.Extensions
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] Massage Studio</title>
+    <environment include="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+    </environment>
+    <environment exclude="Development">
+        <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.css" />
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/css/toastr.min.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
+    </environment>
+    <link rel="stylesheet" href="~/css/site.css" />
+</head>
+<body class="backgroundDefault ">
+    <header>
+        <nav class="navbar navbar-expand-lg bg-dark">
+            <div class="container">
+                <img src="~/images/logo.png" style="width:120px; height:42px" />&nbsp;
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor01"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarColor01">
+                    <ul class="navbar-nav mr-auto">
+                        <li>
+                            <a class="nav-link text-black-50" asp-area="Customer" asp-controller="Home" asp-action="Index">&nbsp;<i class="fas fa-home"></i>&nbsp; Strona Główna</a>
+                        </li>
+                        @if (User.IsInRole(SD.Manager) || User.IsInRole(SD.Admin))
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle text-black-50" href="#" id="navbarDropDown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    &nbsp;<i class="fas fa-tasks "></i>&nbsp; Zarządzanie
+                                </a>
+
+                                <div class="dropdown-menu" aria-labelledby="navbarDropDown">
+                                    <a class="dropdown-item  " asp-area="Admin" asp-controller="Category" asp-action="Index">Kategorie</a>
+                                    <a class="dropdown-item  " asp-area="Admin" asp-controller="TimeService" asp-action="Index">Czas trwania</a>
+                                    <a class="dropdown-item  " asp-area="Admin" asp-controller="Service" asp-action="Index">Usługi</a>
+                                    @if (User.IsInRole(SD.Admin))
+                                    {
+                                        <a class="dropdown-item  " asp-area="Admin" asp-controller="User" asp-action="Index">Pracownicy</a>
+                                    }
+                                    <a class="dropdown-item  " asp-area="Admin" asp-controller="Order" asp-action="Index">Zamówione usługi</a>
+                                </div>
+                            </li>
+                        }
+
+                        @if (HttpContextAccessor.HttpContext.Session.GetObject<List<int>>(SD.SessionCart) != null)
+                        {
+                            <li style="color:white">
+                                <a asp-area="Customer" asp-controller="Cart" asp-action="Index" class="nav-link text-black-50">
+                                    @{ var count = HttpContextAccessor.HttpContext.Session.GetObject<List<int>>(SD.SessionCart).Count; }
+                                    &nbsp;<i class="fas fa-shopping-cart"></i>&nbsp;Koszyk (@count)
+                                </a>
+                            </li>
+                        }
+                        else
+                        {
+                            <li style="color:white">
+                                <a href="#" class="nav-link text-black-50">
+
+                                    &nbsp;<i class="fas fa-shopping-cart"></i>&nbsp; Koszyk (0)
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                    <partial name="_LoginPartial" />
+
+                </div>
+
+            </div>
+        </nav>
+    </header>
+
+    <div class="container my-5 text-black-50">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+   
+    <footer class="border-top footer bg-dark text-white">
+        <div class="container">
+            &copy; 2020 - Project
+        </div>
+    </footer>
+    <script src="https://codepen.io/shshaw/pen/QmZYMG.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.serializeJSON/2.9.0/jquery.serializejson.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
+    <script src="https://kit.fontawesome.com/12139dbad5.js"></script>
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

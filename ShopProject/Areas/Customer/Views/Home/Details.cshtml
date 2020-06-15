@@ -1,0 +1,69 @@
+﻿@model ShopProject.Models.Service
+@using ShopProject.Utility
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+@using ShopProject.Extensions
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="card">
+        <div class="card-header bg-light text-light ml-0 row container">
+            <div class="col-12 col-md-6">
+                <h1 class="text-dark nice-font">@Model.Name</h1>
+            </div>
+            <div class="col-12 col-md-6 text-md-right">
+             
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="container rounded p-2">
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <div class="row">
+                            <div class="col-12">
+                                <h3 class="text-dark">Koszt usługi: @Model.Price zł</h3>
+                                <h4 class="text-dark">Czas trwania: @Model.TimeService.Time</h4>
+                                <p class="text-secondary">@Html.Raw(Model.LongDesc)</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4 text-center">
+                        <img src="@Model.ImageUrl" class="rounded" style="width:80%"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <div class="row">
+                <div class="col-12 col-md-6 pb-1">
+                    <a asp-action="Index" class="btn btn-warning form-control btn-square btn-lg" style="height:50px;">Powrót</a>
+                </div>
+                <div class="col-12 col-md-6 pb-1">
+                    @{ var AddToCartEnabled = true;
+
+                        if (HttpContextAccessor.HttpContext.Session.GetObject<List<int>>(SD.SessionCart) != null)
+                        {
+                            var sessionList = HttpContextAccessor.HttpContext.Session.GetObject<List<int>>(SD.SessionCart);
+                            if (sessionList.Contains(Model.Id))
+                            {
+                                AddToCartEnabled = false;
+                            }
+                        }
+                    }
+                    @if (AddToCartEnabled)
+                    {
+                        <a asp-action="AddToCart" asp-route-serviceId="@Model.Id" class="btn btn-info btn-square form-control btn-lg" style="height:50px;">Dodaj do koszyka</a>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary btn-square form-control btn-lg" style="height:50px;" disabled>Przedmiot znajduje się już w koszyku</button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,72 @@
+﻿@model ShopProject.Models.ViewModels.CartViewModel
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<form method="post">
+    @if (Model.ServiceList.Count > 0)
+    {
+        <br />
+        <div class=" container">
+            <div class="card">
+                <div class="card-header bg-dark text-light ml-0 row container">
+                    <div class="col-12 d-none d-md-block col-md-6 pb-1">
+                        <i class="fas fa-shopping-cart"></i> &nbsp; Koszyk
+                    </div>
+                    
+                </div>
+                <div class="card-body">
+                    @{ var orderTotal = 0.0; }
+
+                    @foreach (var item in Model.ServiceList)
+                    {
+                        orderTotal += (item.Price);
+                        <div class="row">
+                            <div class="d-none d-md-block col-md-2 text-center py-2">
+                                <img src="@item.ImageUrl" class="rounded" style="width:80%" />
+                            </div>
+                            <div class="col-12 col-md-5 text-md-left pt-3">
+                                <h2><strong class="nice-font">@item.Name</strong></h2>
+                                <h5 class="text-secondary">Koszt: @item.Price zł</h5>
+                                <h5 class="text-secondary"><small>Czas trwania:  @item.TimeService.Time</small></h5>
+                            </div>
+                            <div class="col-12 col-md-5 row pt-3">
+                                <div class="col-6 text-md-right" style="padding-top:5px;">
+                                   
+                                </div>
+                                <div class="col-6 text-right">
+                                    <button type="submit" class="btn btn-outline-danger" asp-action="remove" asp-route-serviceId="@item.Id">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />}
+
+                    <div class="row">
+                        <div class="col-12 text-right pr-4">
+                            <p class="text-danger h5">Koszt całkowity: @orderTotal zł</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group row">
+                        <div class="col-8 offset-4">
+                            <div class="row">
+                                <div class="col">
+                                    <a asp-action="Index" asp-controller="Home" asp-area="Customer" class="btn btn-danger form-control">Powrót</a>
+                                </div>
+                                <div class="col">
+                                    <a asp-action="Summary" asp-area="Customer" asp-controller="Cart" class="btn btn-success form-control">Podsumowanie</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div> }
+    else
+    {
+        <div class="backgroundWhite">Brak dodanych usług</div>}
+</form>
+
